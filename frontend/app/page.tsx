@@ -1,11 +1,18 @@
 import {FC} from "react";
+import getRequestClient from "./lib/getRequestClient";
+import { Card as CardUI, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 
 export default async function Home() {
+  const client = getRequestClient();
+  const helloResponse = await client.hello.world("World");
+
   return (
     <section className="flex w-full flex-col justify-center items-center">
       <h1 className="text-5xl mb-20">Next.js + Encore Web App Starter</h1>
 
-      <div className="grid grid-cols-4 max-w-6xl">
+      <div className="grid grid-cols-4 max-w-6xl gap-4">
+        <HelloCard message={helloResponse.message} />
+
         <Card
           href="https://encore.dev/docs"
           heading="Encore Docs"
@@ -40,3 +47,14 @@ const Card: FC<{ href: string; heading: string; desc: string }> = ({href, headin
     <p className="opacity-60">{desc}</p>
   </a>
 }
+
+const HelloCard: FC<{ message: string }> = ({ message }) => {
+  return (
+    <CardUI>
+      <CardHeader>
+        <CardTitle>Hello Service</CardTitle>
+        <CardDescription>{message}</CardDescription>
+      </CardHeader>
+    </CardUI>
+  );
+};

@@ -1,0 +1,178 @@
+# Next.js Modern Web Development Best Practices
+
+This document defines our internal best practices, coding conventions, and processes for developing modern web applications using Next.js (v15, App Router), React 19, TypeScript, Vercel AI SDK, shadcn UI, Radix UI, and Tailwind CSS. It's intended to ensure high-quality, maintainable, and scalable code across our projects.
+
+## 1. Analysis Process
+
+### Before responding to any development request, follow these steps:
+
+#### Request Analysis
+- **Task Identification**
+  - Determine if the task is related to new feature development, debugging, architecture refinement, or tooling
+- **Technology Stack**
+  - Identify the languages and frameworks involved (e.g., TypeScript, React, Next.js, etc.)
+- **Requirement Gathering**
+  - Note explicit and implicit requirements, business goals, and desired outcomes
+- **Context Consideration**
+  - Understand the project's context, existing architecture, and any constraints
+
+#### Solution Planning
+- **Step Breakdown**
+  - Divide the solution into logical, manageable steps
+- **Modularity & Reusability**
+  - Prioritize creating reusable components and functions
+- **File & Dependency Management**
+  - Identify and plan necessary files, dependencies, and third-party integrations
+- **Alternative Approaches**
+  - Evaluate potential solutions, considering trade-offs
+- **Testing Strategy**
+  - Define how you will test and validate the solution (unit, integration, E2E)
+
+#### Implementation Strategy
+- **Design Patterns**
+  - Select appropriate patterns (e.g., container/presentational components, hooks)
+- **Performance**
+  - Consider performance implications, including bundle size and render optimizations
+- **Error Handling**
+  - Plan for error boundaries and graceful degradation
+- **Accessibility**
+  - Ensure compliance with accessibility guidelines (e.g., WCAG) and proper ARIA usage
+- **Best Practices**
+  - Verify that the implementation aligns with industry standards and project-specific guidelines
+
+## 2. Code Style and Structure
+
+### General Principles
+
+- **Readability:** Write concise, readable TypeScript code with clear intent
+- **Functional/Declarative Patterns:** Embrace functional programming styles and declarative component definitions
+- **DRY Principle:** Avoid repeating code by abstracting common logic
+- **Early Returns:** Use early returns to simplify complex conditions
+- **Component Structure:** Organize components into clear sections:
+  - **Exports:** List primary exports at the top
+  - **Subcomponents:** Isolate helper components within the same file if tightly coupled
+  - **Helpers/Utils:** Place utility functions in separate files when used across multiple components
+  - **Types & Interfaces:** Define these at the top or in dedicated type files when extensive
+
+### Naming Conventions
+
+- **Descriptive Names:** Choose names that clearly describe the purpose (e.g., `isLoading`, `hasError`)
+- **Event Handlers:** Prefix with `handle` (e.g., `handleClick`, `handleSubmit`)
+- **Directories:** Use lowercase with dashes (e.g., `components/auth-wizard`)
+- **Exports:** Favor named exports over default exports for better tree-shaking and clarity
+
+### TypeScript Usage
+
+- **Full Adoption:** Use TypeScript across the entire codebase
+- **Interfaces vs. Types:** Prefer interfaces for object shapes and contracts
+- **Enums:** Avoid enums; prefer constant maps for better type safety and runtime behavior
+- **Type Inference:** Leverage TypeScript's inference capabilities, explicitly annotating only when necessary
+- **`satisfies` Operator:** Use the `satisfies` operator for type validation to ensure conformity without excessive verbosity
+
+## 3. React 19 and Next.js 15 Best Practices
+
+### Component Architecture
+
+- **Server Components (RSC):** Favor server components where possible to reduce bundle size and improve performance
+- **Client Directives:** Minimize the use of `"use client"` to keep as much logic on the server as feasible
+- **Error Boundaries:** Implement proper error boundaries to catch and gracefully handle UI errors
+- **Suspense:** Use React's Suspense for asynchronous operations to improve user experience during data fetching
+- **Performance & Web Vitals:** Optimize code for performance and align with Web Vitals metrics
+
+### State Management
+
+- **Form State:** Use `useActionState` instead of deprecated `useFormState` and leverage the enhanced `useFormStatus` for managing data, method, and action states
+- **URL State:** Implement URL state management using appropriate libraries or native Next.js strategies
+- **Minimal Client State:** Keep client-side state minimal by preferring server-driven approaches when possible
+
+### Async Request APIs
+
+Always utilize async versions of runtime APIs:
+
+```typescript
+// Always use async versions of runtime APIs
+const cookieStore = await cookies();
+const headersList = await headers();
+const { isEnabled } = await draftMode();
+
+// Handle async params in layouts/pages
+const params = await props.params;
+const searchParams = await props.searchParams;
+```
+
+## 4. Accessibility and Internationalization Guidelines
+
+- **WCAG Compliance:** Ensure that all components meet WCAG guidelines
+- **ARIA Practices:** Use proper ARIA attributes to improve screen reader accessibility
+- **Semantic HTML:** Prefer semantic HTML elements over generic `<div>` containers
+- **Keyboard Navigation:** Guarantee that interactive elements are keyboard accessible
+- **Internationalization:** Prepare components for internationalization (i18n) by externalizing strings and using libraries like next-i18next
+
+## 5. Testing and Quality Assurance
+
+### Unit Testing
+- **Frameworks:** Use Jest and React Testing Library for unit tests
+- **Coverage:** Aim for high coverage on critical components and functions
+- **Isolation:** Test components in isolation using mocks/stubs where necessary
+
+### Integration Testing
+- **Component Interaction:** Validate interactions between components and state management
+- **Edge Cases:** Write tests that cover edge cases and error conditions
+
+### End-to-End (E2E) Testing
+- **Tools:** Use Cypress or Playwright for E2E tests
+- **User Journeys:** Focus on real user flows and critical paths
+- **CI Integration:** Ensure tests run as part of the CI/CD pipeline
+
+### Code Reviews
+- **Peer Reviews:** Implement mandatory code reviews for new changes
+- **Automated Checks:** Integrate linting, type-checking, and tests in the CI pipeline
+
+## 6. Performance Optimization
+
+- **Static & Server Rendering:** Leverage Next.js features like Static Generation and Server-side Rendering (SSR) where applicable
+- **Code Splitting:** Implement dynamic imports to reduce the initial load bundle
+- **Caching:** Use caching strategies for API calls and static assets
+- **Image Optimization:** Use Next.js `<Image>` component for optimized image delivery
+- **Bundle Analysis:** Periodically analyze bundle size and eliminate unnecessary dependencies
+
+## 7. Security Best Practices
+
+- **Input Validation:** Sanitize and validate all user inputs both on the client and server sides
+- **API Security:** Secure API routes with proper authentication and authorization checks
+- **Dependencies:** Regularly audit and update third-party dependencies
+- **Error Logging:** Implement comprehensive error logging and monitoring
+
+## 8. Deployment and CI/CD
+
+- **Vercel Integration:** Utilize Vercel's platform for deployment, leveraging built-in optimizations
+- **CI/CD Pipelines:** Configure continuous integration pipelines that run tests, linting, and type checks on every commit
+- **Environment Management:** Manage environment variables securely, keeping development, staging, and production configurations separate
+- **Rollback Strategies:** Define rollback procedures for failed deployments
+
+## 9. Documentation and Code Comments
+
+- **In-Code Documentation:** Use JSDoc for functions and components to explain complex logic
+- **README Files:** Maintain clear and concise README documentation in each module/repository
+- **Change Logs:** Update changelogs to reflect new features, bug fixes, and architectural changes
+- **Inline Comments:** Use comments sparingly to explain non-obvious decisions; focus on self-documenting code
+
+## 10. Integration Guidelines for Shadcn UI, Radix UI, and Tailwind CSS
+
+### Shadcn UI & Radix UI
+- **Component Customization:** Use shadcn UI as a baseline and extend components as needed while preserving accessibility and style consistency
+- **Radix Primitives:** Leverage Radix UI's unstyled, accessible primitives to build custom components. Ensure that any overrides respect accessibility concerns
+- **Theme Consistency:** Keep a unified design language across components, utilizing shadcn's recommended patterns for theming
+
+### Tailwind CSS
+- **Configuration:** Maintain a well-organized tailwind.config.js file that defines your color palette, spacing, typography, and breakpoints
+- **Utility-First:** Embrace Tailwind's utility classes for rapid styling but avoid inline class clutter by using component-level abstractions when necessary
+- **Responsive Design:** Use responsive prefixes to build mobile-first designs
+- **Performance:** Use PurgeCSS (or the built-in Tailwind JIT mode) to remove unused styles in production builds
+
+## 11. Maintenance and Continuous Improvement
+
+- **Rule Updates:** Regularly review and update this rules file to reflect new technologies, best practices, and team feedback
+- **Training:** Provide periodic training sessions and code walkthroughs to ensure team members are aligned with these guidelines
+- **Feedback Loop:** Encourage team members to suggest improvements to the rules for evolving project needs
+- **Monitoring:** Use performance and error monitoring tools to identify areas for improvement in code quality and application stability 
